@@ -1,0 +1,12 @@
+{
+  "name": "kickoff",
+  "version": "1.0.0",
+  "description": "A Node.js project that simulates live football matches with real-time score updates and match controls.",
+  "license": "MIT",
+  "author": "mathfews",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
