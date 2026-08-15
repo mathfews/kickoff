@@ -13,6 +13,12 @@ const server = createServer( async (req, res) => {
         const scriptJS = await fs.readFile(pathToScriptJS)
         res.end(scriptJS)
     }
+    else if (req.url == "/scoreboard.json") {
+        res.setHeader("Content-type", "application/json")
+        const pathToScoreboard = path.join(__dirname, "scoreboard.json")
+        const scoreboard = await fs.readFile(pathToScoreboard)
+        res.end(scoreboard)
+    }
     else {
         res.setHeader("Content-type", "text/html")
         const pathToIndexHTML = path.join(__dirname, "index.html")
