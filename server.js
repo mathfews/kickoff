@@ -1,7 +1,6 @@
 import { createServer } from "node:http"
 import fs from "node:fs/promises"
 import path from "node:path"
-import { fstatSync } from "node:fs"
 
 const port = 8000
 const __dirname = import.meta.dirname
@@ -14,10 +13,19 @@ const server = createServer( async (req, res) => {
         res.end(scriptJS)
     }
     else if (req.url == "/scoreboard.json") {
-        res.setHeader("Content-type", "application/json")
+        res.setHeader("Content-type", "text/event-stream")
+        res.setHeader("Cache-Control", "no-cache")
+        res.setHeader("Connection", "keep-alive")
         const pathToScoreboard = path.join(__dirname, "scoreboard.json")
-        const scoreboard = await fs.readFile(pathToScoreboard)
-        res.end(scoreboard)
+        setInterval(async () => {
+            const scoreboard = await fs.readFile(pathToScoreboard, "utf8")
+            const json_data = JSON.parse(scoreboard)
+            json_data[0].home_score = Math.floor(Math.random() * 10) + 1
+            json_data[0].away_score = Math.floor(Math.random() * 10) + 1
+            res.write(
+            `data: ${JSON.stringify({event: 'score-changed', home_score: json_data[0].home_score, away_score: json_data[0].away_score })}\n\n`
+        )
+        }, 2000)
     }
     else {
         res.setHeader("Content-type", "text/html")
